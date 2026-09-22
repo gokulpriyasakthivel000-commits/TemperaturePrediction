@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Daily Temperature Prediction</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(
+                135deg,
+                #dff1ff,
+                #f5fbff
+            );
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 460px;
+            max-width: 100%;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #222;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 13px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .input-box:focus {
+            border-color: #007bff;
+        }
+
+        .predict-button {
+            margin-top: 15px;
+            padding: 13px 28px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .predict-button:hover {
+            background: #0056b3;
+        }
+
+        /* Result */
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f3f8ff;
+            border-radius: 18px;
+        }
+
+        .weather-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 15px;
+            display: block;
+            margin: 0 auto 20px auto;
+        }
+
+        .condition {
+            font-size: 26px;
+            font-weight: bold;
+            color: #222;
+            margin-top: 10px;
+        }
+
+        .temperature {
+            font-size: 30px;
+            font-weight: bold;
+            color: #007bff;
+            margin-top: 12px;
+        }
+
+        .result-text {
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .info {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #777;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <h1>🌤️ Daily Temperature Prediction</h1>
+
+        <p class="subtitle">
+            Predict daily temperature using weather features
+        </p>
+
+
+        <!-- Input Form -->
+
+        <form method="POST">
+
+            <input
+                class="input-box"
+                type="number"
+                step="any"
+                name="humidity"
+                placeholder="Humidity (%)"
+                required
+            >
+
+            <input
+                class="input-box"
+                type="number"
+                step="any"
+                name="pressure"
+                placeholder="Pressure (hPa)"
+                required
+            >
+
+            <input
+                class="input-box"
+                type="number"
+                step="any"
+                name="windspeed"
+                placeholder="Wind Speed (km/h)"
+                required
+            >
+
+            <input
+                class="input-box"
+                type="number"
+                step="any"
+                name="cloudcover"
+                placeholder="Cloud Cover (%)"
+                required
+            >
+
+            <button
+                type="submit"
+                class="predict-button"
+            >
+                Predict Weather
+            </button>
+
+        </form>
+
+
+        <!-- Prediction Result -->
+
+        {% if prediction is not none %}
+
+        <div class="result">
+
+            <img
+                src="{{ image }}"
+                alt="{{ weather }}"
+                class="weather-image"
+            >
+
+            <div class="condition">
+                {{ weather }}
+            </div>
+
+            <div class="temperature">
+                🌡️ {{ "%.2f"|format(prediction) }} °C
+            </div>
+
+            <p class="result-text">
+                Predicted Daily Temperature
+            </p>
+
+            <p class="info">
+                Weather condition based on predicted temperature
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>
