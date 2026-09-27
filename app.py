@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request
 import pickle
+import pandas as pd
 
 app = Flask(__name__)
 
-# Load trained Linear Regression model
+# Load trained model
 with open("model.pkl", "rb") as file:
     model = pickle.load(file)
 
@@ -23,33 +24,37 @@ def home():
         windspeed = float(request.form["windspeed"])
         cloudcover = float(request.form["cloudcover"])
 
-        # Input features
-        features = [[
-            humidity,
-            pressure,
-            windspeed,
-            cloudcover
-        ]]
+        # Create DataFrame with feature names
+        features = pd.DataFrame(
+            [[humidity, pressure, windspeed, cloudcover]],
+            columns=[
+                "Humidity",
+                "Pressure",
+                "WindSpeed",
+                "CloudCover"
+            ]
+        )
 
         # Predict temperature
         prediction = model.predict(features)[0]
 
         # Select weather condition and image
-        if prediction >= 30:
+
+        if cloudcover <= 20 and humidity <= 60:
             weather = "Sunny"
             image = "https://images.unsplash.com/photo-1601297183305-6df142704ea2?w=800"
 
-        elif prediction >= 25:
+        elif cloudcover <= 50 and humidity <= 75:
             weather = "Partly Cloudy"
             image = "https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=800"
 
-        elif prediction >= 20:
-            weather = "Cloudy"
-            image = "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=800"
+        elif humidity >= 80 and cloudcover >= 70:
+            weather = "Rainy"
+            image = "https://images.unsplash.com/photo-1519692933481-e162a57d6721?w=800"
 
         else:
-            weather = "Rainy / Cool"
-            image = "https://images.unsplash.com/photo-1519692933481-e162a57d6721?w=800"
+            weather = "Cloudy"
+            image = "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=800"
 
     return render_template(
         "index.html",
@@ -60,4 +65,8 @@ def home():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )
